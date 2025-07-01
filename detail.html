@@ -1,0 +1,404 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <!-- Meta information for character set and responsive design -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <!-- Page title -->
+  <title>SeedVest – Stock Details</title>
+  
+  <!-- Custom stylesheet -->
+  <link rel="stylesheet" href="css/styles.css" />
+  
+  <!-- Chart.js library for rendering charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- Stylesheet for no-JS fallback -->
+  <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+  
+  <!-- Internal custom styles for layout and design -->
+  <style>
+    :root {
+      --primary-blue: #86EFFF;
+      --primary-brown: #532902;
+      --bg-dark: #1a1a1a;
+      --text-light: #fff;
+    }
+    body {
+      background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-brown) 100%) !important;
+      min-height: 100vh;
+      transition: all 0.3s ease;
+      color: #333;
+    }
+    body.dark-mode {
+      background: linear-gradient(135deg, var(--bg-dark) 0%, var(--primary-brown) 100%) !important;
+      color: var(--text-light);
+    }
+    /* Styling for sidebar, header and wrapper blur effect */
+    #sidebar, #header, .wrapper {
+      backdrop-filter: blur(10px);
+    }
+    /* Logo styling */
+    .logo {
+      color: var(--primary-brown);
+      font-weight: bold;
+      font-size: 2rem;
+      text-decoration: none;
+    }
+    /* Header layout */
+    #header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+    }
+    /* Dark mode toggle button styling */
+    #toggleMode {
+      background: var(--primary-brown);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 25px;
+      cursor: pointer;
+    }
+    /* Wrapper box styling */
+    .wrapper.style1, .wrapper.style2 {
+      margin: 2rem;
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    }
+    .wrapper.style1 {
+      background: rgba(255,255,255,0.1);
+    }
+    .wrapper.style2 {
+      background: rgba(255,255,255,0.95);
+    }
+    .dark-mode .wrapper.style2 {
+      background: rgba(26,26,26,0.95);
+    }
+    /* Main heading styling */
+    h1 {
+      color: white;
+      text-align: center;
+      font-size: 3rem;
+      margin: 1rem 0;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    /* Search form styling */
+    .form-inline {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      align-items: center;
+      margin: 2rem;
+    }
+    .form-inline select, .form-inline input {
+      padding: 0.75rem 1rem;
+      border: 2px solid var(--primary-blue);
+      border-radius: 25px;
+      font-size: 1rem;
+    }
+    .form-inline button {
+      background: var(--primary-brown);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 25px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .form-inline button:hover {
+      background: var(--primary-blue);
+      color: var(--primary-brown);
+    }
+    /* Features (key stats) layout */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px,1fr));
+      gap: 1rem;
+      list-style: none;
+      padding: 0;
+    }
+    .features li {
+      background: linear-gradient(135deg, var(--primary-blue), var(--primary-brown));
+      color: white;
+      padding: 1rem;
+      border-radius: 10px;
+      text-align: center;
+    }
+    /* Chart controls layout */
+    .chart-controls {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .chart-controls select {
+      padding: 0.5rem 1rem;
+      border: 2px solid var(--primary-blue);
+      border-radius: 25px;
+      font-size: 1rem;
+    }
+    /* Chart canvas size */
+    canvas#stockChart {
+      width: 100% !important;
+      height: 300px !important;
+    }
+    /* News article styling */
+    .news-item {
+      margin-bottom: 1.5rem;
+      background: rgba(255,255,255,0.95);
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .news-item a {
+      font-weight: bold;
+      color: var(--primary-brown);
+      text-decoration: none;
+    }
+    .news-item a:hover {
+      text-decoration: underline;
+      color: var(--primary-blue);
+    }
+  </style>
+</head>
+
+<body class="is-preload">
+
+  <!-- Sidebar Navigation -->
+  <section id="sidebar">
+    <div class="inner">
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="news.html">News & Snapshot</a></li>
+          <li><a href="detail.html?symbol=AAPL">Stock Details</a></li>
+          <li><a href="login.html">Login/Register</a></li>
+          <li><a href="portfolio.html">Portfolio</a></li>
+          <li><a href="pro.html">Pro Version</a></li>
+        </ul>
+      </nav>
+    </div>
+  </section>
+
+  <!-- Main Content Wrapper -->
+  <div id="wrapper">
+    
+    <!-- Header with logo and dark mode toggle -->
+    <header id="header">
+      <div class="inner">
+        <a href="index.html" class="logo">SeedVest</a>
+        <button id="toggleMode">Toggle Dark Mode</button>
+      </div>
+    </header>
+
+    <main id="main">
+      
+      <!-- Stock Symbol Display -->
+      <h1 id="stockSymbol">AAPL</h1>
+      
+      <!-- Stock Search Form -->
+      <form class="form-inline" id="stockSearchForm">
+        <select id="countrySelect">
+          <option value="US">USA</option>
+          <option value="GB">UK</option>
+          <option value="DE">Germany</option>
+        </select>
+        <select id="currencySelect">
+          <option value="USD">USD</option>
+          <option value="EUR">EUR</option>
+          <option value="GBP">GBP</option>
+        </select>
+        <input type="text" id="searchStock" placeholder="Symbol (e.g. TSLA)" />
+        <button type="submit">Search</button>
+      </form>
+
+      <!-- Stock Details Section -->
+      <section class="wrapper style2">
+        <h2>Key Stats</h2>
+        <ul class="features" id="detailsContainer">
+          <li>Loading…</li>
+        </ul>
+      </section>
+
+      <!-- Price Chart Section -->
+      <section class="wrapper style2">
+        <h2>Price Chart</h2>
+        <div class="chart-controls">
+          <select id="timeRange">
+            <option value="1D">1 Day</option>
+            <option value="1W">1 Week</option>
+            <option value="1M" selected>1 Month</option>
+            <option value="1Y">1 Year</option>
+          </select>
+        </div>
+        <canvas id="stockChart"></canvas>
+      </section>
+
+      <!-- Related News Section -->
+      <section class="wrapper style2">
+        <h2>Related Articles</h2>
+        <div id="newsContainer">Loading…</div>
+      </section>
+
+    </main>
+
+    <!-- Footer Section -->
+    <footer id="footer">
+      <div class="inner">
+        <ul class="copyright">
+          <li>&copy; 2025 SeedVest</li>
+        </ul>
+      </div>
+    </footer>
+  </div>
+
+  <!-- StockMarketApp Class Logic -->
+  <script>
+    class StockMarketApp {
+      constructor() {
+        // API keys for Marketstack and Marketaux
+        this.keys = {
+          marketstack: 'c17d6970203a0058d63eae8869e022b6',
+          marketaux: 'l4IUY0AQ3Di2PESEwm1G530KnoY2PH5j6mM2BYUg'
+        };
+        this.chart = null; // Chart.js chart instance
+        this.rangeLimits = { '1D': 1, '1W': 7, '1M': 30, '1Y': 365 }; // Time range limits
+      }
+
+      // Generic API request method
+      async _request(service, endpoint, params = {}) {
+        const bases = {
+          marketstack: 'https://api.marketstack.com/v1',
+          marketaux: 'https://api.marketaux.com/v1'
+        };
+        const keys = {
+          marketstack: 'access_key',
+          marketaux: 'api_token'
+        };
+        const url = new URL(`${bases[service]}/${endpoint}`);
+        url.search = new URLSearchParams({
+          [keys[service]]: this.keys[service],
+          ...params
+        });
+
+        try {
+          const res = await fetch(url);
+          const js = await res.json();
+          if (service === 'marketstack' && endpoint === 'eod') return js.data;
+          return service === 'marketaux' ? js.data : (js.data?.[0] || js.data);
+        } catch {
+          return null;
+        }
+      }
+
+      // Get selected currency
+      getCurrency() {
+        return document.getElementById('currencySelect').value;
+      }
+
+      // Get currency symbol based on selected currency
+      getSymbol(cur) {
+        return { USD: '$', EUR: '€', GBP: '£' }[cur] || cur;
+      }
+
+      // Convert USD value to selected currency
+      async convert(val) {
+        const c = this.getCurrency();
+        if (c === 'USD') return val;
+        const r = await fetch(`https://api.exchangerate.host/convert?from=USD&to=${c}`);
+        const j = await r.json();
+        return val * (j.result || 1);
+      }
+
+      // Update stock key details (close, high, low)
+      async updateDetails(sym) {
+        const ul = document.getElementById('detailsContainer');
+        ul.innerHTML = '';
+        const d = await this._request('marketstack', 'eod/latest', { symbols: sym });
+        if (!d) return ul.innerHTML = '<li>No data</li>';
+        const [close, high, low] = await Promise.all([
+          this.convert(d.close),
+          this.convert(d.high),
+          this.convert(d.low)
+        ]);
+        const curS = this.getSymbol(this.getCurrency());
+        [['Close', close], ['High', high], ['Low', low]].forEach(([l, v]) => {
+          ul.insertAdjacentHTML('beforeend', `<li><strong>${l}:</strong> ${curS}${v.toFixed(2)}</li>`);
+        });
+      }
+
+      // Render price chart for selected stock and range
+      async renderChart(sym, range = '1M') {
+        const lim = this.rangeLimits[range] || 30;
+        const data = await this._request('marketstack', 'eod', { symbols: sym, limit: lim });
+        if (!data?.length) return;
+        const s = data.sort((a, b) => new Date(a.date) - new Date(b.date));
+        const labels = s.map(d => new Date(d.date).toLocaleDateString());
+        const values = s.map(d => d.close);
+        const color = values[values.length - 1] >= values[0] ? '#00c853' : '#d50000';
+        if (this.chart) this.chart.destroy();
+        this.chart = new Chart(document.getElementById('stockChart').getContext('2d'), {
+          type: 'line',
+          data: {
+            labels,
+            datasets: [{
+              label: sym,
+              data: values,
+              borderColor: color,
+              fill: false,
+              tension: 0.2
+            }]
+          },
+          options: { responsive: true }
+        });
+      }
+
+      // Fetch and display related news articles
+      async updateNews(sym) {
+        const div = document.getElementById('newsContainer');
+        div.innerHTML = '';
+        const items = await this._request('marketaux', 'news/all', { symbols: sym, limit: 5, language: 'en' });
+        if (!items?.length) return div.innerHTML = '<p>No articles</p>';
+        items.forEach(a => {
+          const d = document.createElement('div');
+          d.className = 'news-item';
+          d.innerHTML = `<a href="${a.url}" target="_blank">${a.title}</a><p>${a.snippet || ''}</p><small>${a.source} • ${new Date(a.published_at).toLocaleDateString()}</small>`;
+          div.appendChild(d);
+        });
+      }
+
+      // Initialize app with event listeners and default stock
+      init() {
+        document.getElementById('toggleMode').onclick = () => document.body.classList.toggle('dark-mode');
+        document.body.classList.toggle('dark-mode', localStorage.getItem('darkMode') === 'true');
+        
+        document.getElementById('stockSearchForm').onsubmit = async e => {
+          e.preventDefault();
+          const sym = document.getElementById('searchStock').value.trim().toUpperCase();
+          if (!sym) return;
+          document.getElementById('stockSymbol').textContent = sym;
+          await this.updateDetails(sym);
+          await this.renderChart(sym, document.getElementById('timeRange').value);
+          await this.updateNews(sym);
+        };
+
+        document.getElementById('timeRange').onchange = e => 
+          this.renderChart(document.getElementById('stockSymbol').textContent, e.target.value);
+
+        const init = 'AAPL';
+        document.getElementById('stockSymbol').textContent = init;
+        this.updateDetails(init);
+        this.renderChart(init, document.getElementById('timeRange').value);
+        this.updateNews(init);
+      }
+    }
+
+    // Instantiate and initialize the StockMarketApp
+    new StockMarketApp().init();
+  </script>
+</body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<!-- NOTE: session_start() is placed incorrectly, it belongs inside a PHP block on top of a .php file, not in HTML -->
+<!-- Correct usage: Place <?php session_start(); ?> at the very top of your backend PHP files -->
+
+<head>
+  <!-- Meta tags for encoding and responsive design -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Page title -->
+  <title>SeedVest – Login/Register</title>
+  
+  <!-- Custom styles for your project -->
+  <link rel="stylesheet" href="css/styles.css" />
+
+  <!-- Styles for users with JavaScript disabled -->
+  <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+
+  <!-- Internal custom styles for layout, theming, forms -->
+  <style>
+    :root {
+      --primary-blue: #86EFFF;
+      --primary-brown: #532902;
+      --bg-dark: #1a1a1a;
+      --text-light: #fff;
+    }
+
+    /* Body background gradient */
+    body {
+      background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-brown) 100%) !important;
+      color: #333;
+      transition: all 0.3s ease;
+    }
+
+    /* Dark mode background styling */
+    body.dark-mode {
+      background: linear-gradient(135deg, var(--bg-dark) 0%, var(--primary-brown) 100%) !important;
+      color: var(--text-light);
+    }
+
+    /* Blur effect for sidebar, header, and wrappers */
+    #sidebar, #header, .wrapper {
+      backdrop-filter: blur(10px);
+    }
+
+    /* Logo text styling */
+    .logo {
+      color: var(--primary-brown);
+      font-weight: bold;
+      font-size: 2rem;
+      text-decoration: none;
+    }
+
+    /* Header layout with space between logo and button */
+    #header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+    }
+
+    /* Dark mode toggle button styling */
+    #toggleMode {
+      background: var(--primary-brown);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 25px;
+      cursor: pointer;
+    }
+
+    /* Wrapper box styling */
+    .wrapper.style2 {
+      background: rgba(255, 255, 255, 0.95);
+      margin: 2rem;
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Dark mode adjustment for wrapper box */
+    .dark-mode .wrapper.style2 {
+      background: rgba(26, 26, 26, 0.95);
+    }
+
+    /* Section headings */
+    h2 {
+      color: var(--primary-brown);
+      margin-bottom: 1rem;
+    }
+
+    /* Spacing between form fields */
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    /* Input field styling */
+    .form-control {
+      padding: 0.75rem 1rem;
+      border: 2px solid var(--primary-blue);
+      border-radius: 25px;
+    }
+
+    /* Button styling for primary action buttons */
+    .button.primary {
+      background: var(--primary-brown);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 25px;
+      cursor: pointer;
+    }
+
+    /* Button hover effect */
+    .button.primary:hover {
+      background: var(--primary-blue);
+      color: var(--primary-brown);
+    }
+  </style>
+</head>
+
+<body class="is-preload">
+
+  <!-- Sidebar Navigation -->
+  <section id="sidebar">
+    <div class="inner">
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="news.html">News & Snapshot</a></li>
+          <li><a href="detail.html?symbol=AAPL">Stock Details</a></li>
+          <li><a href="login.html">Login/Register</a></li>
+          <li><a href="portfolio.html">Portfolio</a></li>
+          <li><a href="pro.html">Pro Version</a></li>
+        </ul>
+      </nav>
+    </div>
+  </section>
+
+  <!-- Main Content Wrapper -->
+  <div id="wrapper">
+
+    <!-- Header with Logo and Dark Mode Toggle -->
+    <header id="header">
+      <div class="inner">
+        <a href="index.html" class="logo">SeedVest</a>
+        <button id="toggleMode">Toggle Dark Mode</button>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main id="main">
+
+      <!-- Login Form Section -->
+      <section class="wrapper style2">
+        <div class="inner">
+          <h2>Sign In to Your Account</h2>
+          <form id="loginForm" action="php/backend.php" method="POST">
+            <div class="form-group">
+              <input type="text" name="username" id="username" class="form-control" placeholder="Username" required />
+            </div>
+            <div class="form-group">
+              <input type="password" name="password" id="password" class="form-control" placeholder="Password" required />
+            </div>
+            <div class="form-group">
+              <button type="submit" class="button primary">Sign In</button>
+            </div>
+            <div id="loginMessage"></div> <!-- Placeholder for login feedback -->
+          </form>
+        </div>
+      </section>
+
+      <!-- Registration Form Section -->
+      <section class="wrapper style2">
+        <div class="inner">
+          <h2>Create New Account</h2>
+          <form id="registerForm" action="php/backend.php" method="POST">
+            <div class="form-group">
+              <input type="text" name="firstname" id="firstname" class="form-control" placeholder="First Name" required />
+            </div>
+            <div class="form-group">
+              <input type="text" name="lastname" id="lastname" class="form-control" placeholder="Last Name" required />
+            </div>
+            <div class="form-group">
+              <input type="email" name="email" id="email" class="form-control" placeholder="Email" required />
+            </div>
+            <div class="form-group">
+              <input type="password" name="newpassword" id="newpassword" class="form-control" placeholder="Password" required />
+            </div>
+            <div class="form-group">
+              <button type="submit" class="button primary">Register</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer Section -->
+    <footer id="footer">
+      <div class="inner">
+        <ul class="copyright">
+          <li>&copy; 2025 SeedVest</li>
+        </ul>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- JavaScript for Dark Mode Toggle -->
+  <script>
+    document.getElementById('toggleMode').onclick = () => document.body.classList.toggle('dark-mode');
+  </script>
+
+</body>
+</html>

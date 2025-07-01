@@ -1,0 +1,284 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <!-- Meta tags for encoding and responsive design -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Page title -->
+  <title>SeedVest – News & Snapshot</title>
+
+  <!-- Bootstrap CSS for layout and responsive utilities -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+
+  <!-- Custom stylesheet for additional styles -->
+  <link rel="stylesheet" href="css/styles.css" />
+
+  <!-- Stylesheet for users with JavaScript disabled -->
+  <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+
+  <!-- Internal styles for layout, theming, and design -->
+  <style>
+    :root {
+      --primary-blue: #86EFFF;
+      --primary-brown: #532902;
+      --bg-dark: #1a1a1a;
+      --text-light: #fff;
+    }
+
+    /* Body background gradient */
+    body {
+      background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-brown) 100%) !important;
+      color: #333;
+      transition: .3s;
+    }
+
+    /* Dark mode styling for body */
+    body.dark-mode {
+      background: linear-gradient(135deg, var(--bg-dark) 0%, var(--primary-brown) 100%) !important;
+      color: var(--text-light);
+    }
+
+    /* Blur effect for sidebar, header, and content wrappers */
+    #sidebar, #header, .wrapper {
+      backdrop-filter: blur(10px);
+    }
+
+    /* Logo text styling */
+    .logo {
+      color: var(--primary-brown);
+      font-weight: bold;
+      font-size: 2rem;
+      text-decoration: none;
+    }
+
+    /* Header layout with spacing between elements */
+    #header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+    }
+
+    /* Dark mode toggle button and country dropdown */
+    #toggleMode, #countrySelect {
+      background: var(--primary-brown);
+      color: #fff;
+      border: none;
+      padding: .5rem 1rem;
+      border-radius: 25px;
+      cursor: pointer;
+    }
+
+    /* Country selector with different background */
+    #countrySelect {
+      background: #fff;
+      color: #333;
+      border: 2px solid var(--primary-blue);
+    }
+
+    /* Wrapper box styling */
+    .wrapper.style2 {
+      background: rgba(255,255,255,0.95);
+      margin: 2rem;
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    }
+
+    /* Dark mode background for wrapper */
+    .dark-mode .wrapper.style2 {
+      background: rgba(26,26,26,0.95);
+    }
+
+    /* Grid layout for top stocks */
+    .features {
+      list-style: none;
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+    }
+
+    /* Top stock item styling */
+    .features li {
+      background: linear-gradient(135deg, var(--primary-blue), var(--primary-brown));
+      color: #fff;
+      padding: 1rem;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    /* Stock item link inherits color */
+    .features li a {
+      display: block;
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* Hover effect for stock items */
+    .features li:hover {
+      opacity: 0.9;
+    }
+
+    /* News article card styling */
+    .news-item {
+      background: rgba(255,255,255,0.95);
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      margin-bottom: 1rem;
+    }
+
+    /* News article title link styling */
+    .news-item a {
+      font-weight: bold;
+      color: var(--primary-brown);
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body class="is-preload">
+
+  <!-- Sidebar Navigation -->
+  <section id="sidebar">
+    <div class="inner">
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="news.html">News & Snapshot</a></li>
+          <li><a href="detail.html?symbol=AAPL">Stock Details</a></li>
+          <li><a href="login.html">Login/Register</a></li>
+          <li><a href="portfolio.html">Portfolio</a></li>
+          <li><a href="pro.html">Pro Version</a></li>
+        </ul>
+      </nav>
+    </div>
+  </section>
+
+  <!-- Main Content Wrapper -->
+  <div id="wrapper">
+
+    <!-- Header with Logo, Country Selector, and Dark Mode Toggle -->
+    <header id="header">
+      <div class="inner">
+        <a href="index.html" class="logo">SeedVest</a>
+        <div>
+          <select id="countrySelect">
+            <option value="US">USA</option>
+            <option value="GB">UK</option>
+            <option value="DE">Germany</option>
+          </select>
+          <button id="toggleMode">Dark Mode</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main id="main">
+
+      <!-- Latest News Section -->
+      <section class="wrapper style2">
+        <div class="inner">
+          <h2>Latest News</h2>
+          <div id="newsContainer">Loading…</div>
+        </div>
+      </section>
+
+      <!-- Top Stocks Section -->
+      <section class="wrapper style2">
+        <div class="inner">
+          <h2>Top Stocks</h2>
+          <ul class="features" id="topStocks"></ul>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer Section -->
+    <footer id="footer">
+      <div class="inner">
+        <ul class="copyright">
+          <li>&copy; 2025 SeedVest</li>
+        </ul>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- JavaScript for dark mode and dynamic content -->
+  <script>
+    // Toggle dark mode on button click
+    document.getElementById('toggleMode').onclick = () => document.body.classList.toggle('dark-mode');
+
+    // NewsApp class to manage news and stock display
+    class NewsApp {
+      constructor() {
+        this.newsKey = 'l4IUY0AQ3Di2PESEwm1G530KnoY2PH5j6mM2BYUg'; // Marketaux API key
+        this.stockKey = 'c17d6970203a0058d63eae8869e022b6'; // Marketstack API key
+        this.top = ['AAPL', 'MSFT', 'GOOGL']; // Top stock symbols
+      }
+
+      // Fetch latest news by country
+      async fetchNews(country) {
+        const url = new URL('https://api.marketaux.com/v1/news/all');
+        url.search = new URLSearchParams({ api_token: this.newsKey, countries: country, limit: 5 });
+        const r = await fetch(url);
+        const j = await r.json();
+        return j.data;
+      }
+
+      // Fetch latest price data for a stock symbol
+      async fetchQuote(sym) {
+        const url = new URL('https://api.marketstack.com/v1/eod/latest');
+        url.search = new URLSearchParams({ access_key: this.stockKey, symbols: sym });
+        const r = await fetch(url);
+        const j = await r.json();
+        return j.data[0];
+      }
+
+      // Render top stock list
+      renderStocks() {
+        const ul = document.getElementById('topStocks');
+        ul.innerHTML = '';
+        this.top.forEach(async s => {
+          const d = await this.fetchQuote(s);
+          ul.insertAdjacentHTML('beforeend', `
+            <li><a href="detail.html?symbol=${s}">
+              <strong>${s}</strong><br>$${d.close.toFixed(2)}
+            </a></li>
+          `);
+        });
+      }
+
+      // Render latest news based on selected country
+      async renderNews() {
+        const div = document.getElementById('newsContainer');
+        div.innerHTML = '';
+        const c = document.getElementById('countrySelect').value;
+        const items = await this.fetchNews(c);
+        items.forEach(a => {
+          div.insertAdjacentHTML('beforeend', `
+            <div class="news-item">
+              <a href="${a.url}" target="_blank">${a.title}</a>
+              <p>${a.snippet || ''}</p>
+            </div>
+          `);
+        });
+      }
+
+      // Initialize app with event listeners and initial content
+      init() {
+        document.getElementById('countrySelect').onchange = () => this.renderNews();
+        this.renderNews();
+        this.renderStocks();
+      }
+    }
+
+    // Instantiate and initialize NewsApp
+    new NewsApp().init();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <!-- Meta tags for encoding and responsive design -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <!-- Page title -->
+  <title>SeedVest – Home</title>
+  
+  <!-- Custom stylesheet for additional styles -->
+  <link rel="stylesheet" href="css/styles.css" />
+  
+  <!-- Stylesheet for users with JavaScript disabled -->
+  <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+  
+  <!-- Internal styles: colors, layout, theming -->
+  <style>
+    :root {
+      --primary-blue: #86EFFF;
+      --primary-brown: #532902;
+      --bg-dark: #1a1a1a;
+      --text-light: #fff;
+    }
+    /* Default body styling with gradient background */
+    body {
+      background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-brown) 100%) !important;
+      min-height: 100vh;
+      transition: all 0.3s ease;
+      color: #333;
+    }
+    /* Dark mode body styling */
+    body.dark-mode {
+      background: linear-gradient(135deg, var(--bg-dark) 0%, var(--primary-brown) 100%) !important;
+      color: var(--text-light);
+    }
+    /* Blur effect for sidebar, header, and wrapper boxes */
+    #sidebar, #header, .wrapper {
+      backdrop-filter: blur(10px);
+    }
+    /* Transparent wrapper with light border for intro */
+    .wrapper.style1 {
+      background: rgba(255,255,255,0.1);
+      border-radius: 20px;
+      margin: 2rem;
+      padding: 2rem;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    }
+    /* Solid white wrapper for snapshot section */
+    .wrapper.style2 {
+      background: rgba(255,255,255,0.95);
+      border-radius: 20px;
+      margin: 2rem;
+      padding: 2rem;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    }
+    /* Dark mode variant for snapshot section */
+    .dark-mode .wrapper.style2 {
+      background: rgba(26,26,26,0.95);
+    }
+    /* Logo styling - solid color */
+    .logo {
+      color: var(--primary-brown);
+      font-weight: bold;
+      font-size: 2rem;
+    }
+    /* Header layout: logo left, button right */
+    #header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+    }
+    /* Dark mode toggle button styling */
+    #header .button {
+      background: var(--primary-brown);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 25px;
+      cursor: pointer;
+    }
+    /* Greeting message styling */
+    h1.greeting {
+      color: white;
+      text-align: center;
+      font-size: 2.5rem;
+      margin-top: 2rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    /* Intro text container */
+    #intro {
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    /* Grid layout for snapshot feature boxes */
+    #snapshot .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
+      gap: 2rem;
+      list-style: none;
+      padding: 0;
+    }
+    /* Styling for each stock snapshot box */
+    #snapshot .features li {
+      background: linear-gradient(135deg, var(--primary-blue), var(--primary-brown));
+      padding: 2rem;
+      border-radius: 15px;
+      color: white;
+      font-weight: 500;
+      text-align: center;
+    }
+    /* Green for positive change */
+    .green { color: #00c853; }
+    /* Red for negative change */
+    .red { color: #d50000; }
+  </style>
+</head>
+
+<body class="is-preload">
+  
+  <!-- Sidebar Navigation Menu -->
+  <section id="sidebar">
+    <div class="inner">
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="news.html">News & Snapshot</a></li>
+          <li><a href="detail.html?symbol=AAPL">Stock Details</a></li>
+          <li><a href="login.html">Login/Register</a></li>
+          <li><a href="portfolio.html">Portfolio</a></li>
+          <li><a href="pro.html">Pro Version</a></li>
+        </ul>
+      </nav>
+    </div>
+  </section>
+
+  <!-- Main Wrapper for Header, Content, and Footer -->
+  <div id="wrapper">
+    
+    <!-- Header with Logo and Dark Mode Button -->
+    <header id="header">
+      <div class="inner">
+        <a href="index.html" class="logo">SeedVest</a>
+        <button id="toggleMode" class="button">Toggle Dark Mode</button>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <div id="main">
+      
+      <!-- Dynamic greeting message -->
+      <h1 class="greeting" id="greetingMsg"></h1>
+
+      <!-- Intro Text Section -->
+      <section id="intro" class="wrapper style1">
+        <div class="inner">
+          <p>SeedVest is your gateway to quick market insights. Get real-time snapshots of top stocks, detailed charts, and curated news articles—all in one sleek dashboard.</p>
+        </div>
+      </section>
+
+      <!-- Top Snapshot Section for displaying key stocks -->
+      <section id="snapshot" class="wrapper style2">
+        <div class="inner">
+          <h2>Top Snapshot</h2>
+          <ul class="features" id="snapshotContainer"></ul>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Footer Section -->
+    <footer id="footer">
+      <div class="inner">
+        <ul class="copyright">
+          <li>© 2025 SeedVest</li>
+        </ul>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- JavaScript for greeting, dark mode, and stock snapshot logic -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Set greeting based on time of day
+      const hour = new Date().getHours();
+      let msg = 'Welcome to SeedVest!';
+      if (hour < 12) msg = 'Good morning, Investor!';
+      else if (hour < 18) msg = 'Good afternoon, Investor!';
+      else msg = 'Good evening, Investor!';
+      document.getElementById('greetingMsg').textContent = msg;
+
+      // Toggle dark mode when button clicked
+      document.getElementById('toggleMode').onclick = () => {
+        document.body.classList.toggle('dark-mode');
+      };
+
+      // HomeApp class for fetching and displaying top stock data
+      class HomeApp {
+        constructor() {
+          this.key = 'c17d6970203a0058d63eae8869e022b6'; // API key for Marketstack
+          this.symbols = ['AAPL', 'MSFT', 'GOOGL']; // List of top stocks
+        }
+
+        // Fetch latest stock data for a symbol
+        async fetch(sym) {
+          const url = new URL('https://api.marketstack.com/v1/eod/latest');
+          url.search = new URLSearchParams({ access_key: this.key, symbols: sym });
+          const res = await fetch(url);
+          const js = await res.json();
+          return js.data[0];
+        }
+
+        // Initialize snapshot display
+        async init() {
+          const ul = document.getElementById('snapshotContainer');
+          ul.innerHTML = '';
+          for (const sym of this.symbols) {
+            const d = await this.fetch(sym);
+            const change = d.close - d.open;
+            const pct = ((change / d.open) * 100).toFixed(1);
+            const cls = change >= 0 ? 'green' : 'red';
+            const sign = change >= 0 ? '+' : '';
+            // Append stock data to snapshot list
+            ul.insertAdjacentHTML('beforeend', `
+              <li>
+                <strong>${sym}</strong><br>
+                $${d.close.toFixed(2)} <span class="${cls}">${sign}${change.toFixed(2)} (${pct}%)</span>
+              </li>
+            `);
+          }
+        }
+      }
+
+      // Start the HomeApp
+      new HomeApp().init();
+    });
+  </script>
+</body>
+</html>

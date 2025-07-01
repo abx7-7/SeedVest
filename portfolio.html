@@ -1,0 +1,294 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <!-- Meta settings for encoding and responsive design -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Page title -->
+  <title>SeedVest – Portfolio</title>
+
+  <!-- Custom stylesheet for additional project styles -->
+  <link rel="stylesheet" href="css/styles.css" />
+
+  <!-- Stylesheet for users with JavaScript disabled -->
+  <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+
+  <!-- Internal CSS for layout, theming, and design adjustments -->
+  <style>
+    :root {
+      --primary-blue: #86EFFF;
+      --primary-brown: #532902;
+      --bg-dark: #1a1a1a;
+      --text-light: #fff;
+    }
+
+    /* Gradient background for body */
+    body {
+      background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-brown) 100%) !important;
+      color: #333;
+      transition: .3s;
+    }
+
+    /* Dark mode background for body */
+    body.dark-mode {
+      background: linear-gradient(135deg, var(--bg-dark) 0%, var(--primary-brown) 100%) !important;
+      color: var(--text-light);
+    }
+
+    /* Blur effect for sidebar, header, and wrapper containers */
+    #sidebar, #header, .wrapper {
+      backdrop-filter: blur(10px);
+    }
+
+    /* Logo styling */
+    .logo {
+      color: var(--primary-brown);
+      font-weight: bold;
+      font-size: 2rem;
+      text-decoration: none;
+    }
+
+    /* Header layout */
+    #header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+    }
+
+    /* Dark mode toggle and currency dropdown styling */
+    #toggleMode, #currencySelect {
+      background: var(--primary-brown);
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 25px;
+      cursor: pointer;
+    }
+
+    /* Currency selector adjusted with different background and border */
+    #currencySelect {
+      background: white;
+      color: #333;
+      border: 2px solid var(--primary-blue);
+    }
+
+    /* Wrapper styling for sections */
+    .wrapper.style2 {
+      background: rgba(255,255,255,0.95);
+      margin: 2rem;
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    }
+
+    /* Dark mode adjustment for wrappers */
+    .dark-mode .wrapper.style2 {
+      background: rgba(26,26,26,0.95);
+    }
+
+    /* Portfolio grid layout */
+    .portfolio-list {
+      list-style: none;
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    /* Styling for each portfolio/watchlist item */
+    .portfolio-item {
+      background: rgba(255,255,255,0.95);
+      padding: 1rem;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    /* Stock symbol title */
+    .portfolio-item h3 {
+      margin: 0.5rem 0;
+    }
+
+    /* Price display styling */
+    .portfolio-item .price {
+      font-size: 1.25rem;
+      font-weight: bold;
+    }
+
+    /* Form layout for adding new watchlist symbol */
+    .add-form {
+      display: flex;
+      gap: 0.5rem;
+      margin: 1rem 0;
+    }
+
+    /* Input for stock symbol */
+    .add-form input {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border: 2px solid var(--primary-blue);
+      border-radius: 25px;
+    }
+
+    /* Add button styling */
+    .add-form button {
+      background: var(--primary-brown);
+      color: #fff;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 25px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body class="is-preload">
+
+  <!-- Sidebar Navigation -->
+  <section id="sidebar">
+    <div class="inner">
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="news.html">News & Snapshot</a></li>
+          <li><a href="detail.html?symbol=AAPL">Stock Details</a></li>
+          <li><a href="login.html">Login/Register</a></li>
+          <li><a href="portfolio.html">Portfolio</a></li>
+          <li><a href="pro.html">Pro Version</a></li>
+        </ul>
+      </nav>
+    </div>
+  </section>
+
+  <!-- Main Content Wrapper -->
+  <div id="wrapper">
+
+    <!-- Header with Logo, Currency Selector, and Dark Mode Toggle -->
+    <header id="header">
+      <div class="inner">
+        <a href="index.html" class="logo">SeedVest</a>
+        <div>
+          <select id="currencySelect">
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="GBP">GBP</option>
+          </select>
+          <button id="toggleMode">Toggle Dark Mode</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Page Content -->
+    <main id="main">
+
+      <!-- Watchlist Section -->
+      <div class="wrapper style2">
+        <div class="inner">
+          <h2>Your Watchlist</h2>
+          <form id="addWatchForm" class="add-form">
+            <input type="text" id="newSymbol" placeholder="Symbol (e.g. TSLA)" required />
+            <button type="submit">Add</button>
+          </form>
+          <ul class="portfolio-list" id="watchlist"></ul>
+        </div>
+      </div>
+
+      <!-- Portfolio Holdings Section -->
+      <div class="wrapper style2">
+        <div class="inner">
+          <h2>Your Portfolio</h2>
+          <ul class="portfolio-list" id="portfolio"></ul>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Footer Section -->
+    <footer id="footer">
+      <div class="inner">
+        <ul class="copyright">
+          <li>&copy; 2025 SeedVest</li>
+        </ul>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- JavaScript for functionality -->
+  <script>
+    // Toggle dark mode on button click
+    document.getElementById('toggleMode').onclick = () => document.body.classList.toggle('dark-mode');
+
+    // PortfolioApp class for managing watchlist and portfolio
+    class PortfolioApp {
+      constructor() {
+        this.key = 'c17d6970203a0058d63eae8869e022b6'; // API key for Marketstack
+        this.watch = ['AAPL', 'MSFT', 'GOOGL', 'TSLA', 'AMZN']; // Default watchlist symbols
+        this.portf = ['FB', 'NFLX', 'IBM', 'ORCL', 'SAP']; // Default portfolio holdings
+      }
+
+      // Fetch latest price for a stock symbol
+      async fetchPrice(sym) {
+        const res = await fetch(`https://api.marketstack.com/v1/eod/latest?access_key=${this.key}&symbols=${sym}`);
+        const js = await res.json();
+        return js.data[0];
+      }
+
+      // Convert price to selected currency if necessary
+      async convert(value) {
+        const cur = document.getElementById('currencySelect').value;
+        if (cur === 'USD') return value;
+        const res = await fetch(`https://api.exchangerate.host/convert?from=USD&to=${cur}`);
+        const js = await res.json();
+        return value * (js.result || 1);
+      }
+
+      // Render stock list (watchlist or portfolio)
+      async render(symbols, el) {
+        const ul = document.getElementById(el);
+        ul.innerHTML = '';
+        for (let s of symbols) {
+          const d = await this.fetchPrice(s);
+          const price = await this.convert(d.close);
+          const symChar = { USD: '$', EUR: '€', GBP: '£' }[document.getElementById('currencySelect').value];
+          const li = document.createElement('li');
+          li.className = 'portfolio-item';
+          li.innerHTML = `
+            <h3><a href="detail.html?symbol=${s}">${s}</a></h3>
+            <p class="price">${symChar}${price.toFixed(2)}</p>
+          `;
+          ul.appendChild(li);
+        }
+      }
+
+      // Initialize the portfolio app with event listeners
+      init() {
+        document.getElementById('currencySelect').onchange = () => {
+          this.render(this.watch, 'watchlist');
+          this.render(this.portf, 'portfolio');
+        };
+
+        this.render(this.watch, 'watchlist');
+        this.render(this.portf, 'portfolio');
+
+        // Add symbol to watchlist on form submit
+        document.getElementById('addWatchForm').addEventListener('submit', async e => {
+          e.preventDefault();
+          const s = document.getElementById('newSymbol').value.trim().toUpperCase();
+          if (s) {
+            this.watch.push(s);
+            await this.render(this.watch, 'watchlist');
+          }
+          e.target.reset();
+        });
+      }
+    }
+
+    // Instantiate and initialize PortfolioApp
+    new PortfolioApp().init();
+  </script>
+
+</body>
+</html>
